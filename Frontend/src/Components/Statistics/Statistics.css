@@ -1,6 +1,6 @@
-/* StatisticsBox.css */
 
-/* Container for the entire component */
+
+
 .main {
   margin-top: 20px;
     background-color: #c6b26f;
@@ -9,7 +9,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  /* Dropdown select for months */
+  
   select {
     width: 100%;
     padding: 10px;
@@ -20,7 +20,7 @@
     background-color: #d0a030;
   }
   
-  /* Statistics display area */
+  
   .statistics {
     display: flex;
     justify-content: space-between;
@@ -31,13 +31,13 @@
     padding: 10px;
   }
   
-  /* Individual statistic items */
+  
   .statistics p {
     font-size: 14px;
     margin: 0;
   }
   
-  /* Styling for specific statistics (customize colors as needed) */
+  
   .total-sale {
     color: #007bff;
   }

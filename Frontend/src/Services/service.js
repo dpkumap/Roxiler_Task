@@ -1,7 +1,7 @@
-// src/services/api.js
+
 import axios from 'axios';
 
-const API_URL = 'http://localhost:7000'; // Update with your backend URL if different
+const API_URL = 'http://localhost:7000'; 
 
 export const fetchTransactions = (month) => {
     return axios.get(`${API_URL}/transactions`, { params: { month } });

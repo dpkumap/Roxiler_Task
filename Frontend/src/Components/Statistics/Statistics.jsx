@@ -32,7 +32,7 @@ const Statistics = () => {
                     <option value="October">October</option>
                     <option value="November">November</option>
                     <option value="December">December</option>
-        {/* Add other month options here */}
+        
 
       </select>
       <div className="statistics">

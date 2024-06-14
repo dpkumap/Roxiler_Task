@@ -17,54 +17,6 @@ mongoose.connect(process.env.MONGODB_URL)
         console.error('Error connecting to MongoDB:', err);
     });
 
-// // Define a Mongoose schema and model
-// const productSchema = new mongoose.Schema({
-//     id: Number,
-//     title: String,
-//     price: Number,
-//     description: String,
-//     category: String,
-//     image: String,
-//     sold: Boolean,
-//     dateOfSale: String
-// });
-
-
-// const Product = mongoose.model('Product', productSchema);
-
-// // Route to initialize the database
-// app.get('/initialize-db', async (req, res) => {
-//     try {
-//         // Fetch data from the third-party API
-//         const response = await axios.get('https://s3.amazonaws.com/roxiler.com/product_transaction.json');
-//         const products = response.data;
-
-//         // Clear existing data
-//         await Product.deleteMany({});
-
-//         // Insert new data
-//         await Product.insertMany(products);
-
-//         res.send('Database initialized with seed data');
-//     } catch (error) {
-//         console.error('Error initializing database:', error);
-//         res.status(500).send('Error initializing database');
-//     }
-// });
-
-// // Root route
-// app.get("/", (req, res) => {
-//     res.json({ message: "Express app is running" });
-// });
-
-// // Start the server
-// app.listen(PORT, () => {
-//     console.log(`Server is running on http://localhost:${PORT}`);
-// });
-
-// //List all transactions with search and pagination
-
-
 // Define a Mongoose schema and model
 const productSchema = new mongoose.Schema({
     id: Number,
@@ -108,61 +60,6 @@ app.get('/allproducts',async (req,res)=>{
 })
 // API to list all transactions with search and pagination
 
-// const moment = require('moment-timezone');
-
-// app.get('/transactions', async (req, res) => {
-//     try {
-//         const { month, search = '', page = 1, perPage = 10 } = req.query;
-
-//         // Validate and parse month input
-//         const monthIndex = parseMonthInput(month);
-//         if (monthIndex === -1) {
-//             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
-//         }
-
-//         // Create a regex pattern to match the month regardless of the year
-//         const monthPattern = `-${padTwoDigits(monthIndex + 1)}-`;
-        
-//         // Build query based on search parameters and date pattern
-//         const query = {
-//             dateOfSale: { $regex: monthPattern }
-//         };
-
-//         if (search) {
-//             query.$or = [
-//                 { title: { $regex: search, $options: 'i' } },
-//                 { description: { $regex: search, $options: 'i' } },
-//                 { price: parseFloat(search) }
-//             ];
-//         }
-
-//         // Logging: Log the constructed query before executing it
-//         console.log('Executing query:', query);
-
-//         // Execute query to get total count
-//         const totalCount = await Product.countDocuments(query);
-
-//         // Logging: Log the total count of matching documents
-//         console.log('Total count of matching documents:', totalCount);
-
-//         // Execute query with pagination
-//         const transactions = await Product.find(query)
-//             .skip((page - 1) * perPage)
-//             .limit(parseInt(perPage));
-
-//         // Logging: Log the transactions found
-//         console.log('Transactions found:', transactions);
-
-//         res.json({
-//             totalCount,
-//             transactions
-//         });
-//     } catch (error) {
-//         console.error('Error fetching transactions:', error);
-//         res.status(500).send('Error fetching transactions');
-//     }
-// });
-// Updated /transactions endpoint
 app.get('/transactions', async (req, res) => {
     try {
         const { month, search, page = 1, perPage = 10 } = req.query;
@@ -231,16 +128,16 @@ app.get('/statistics', async (req, res) => {
     try {
         const { month } = req.query;
 
-        // Validate and parse month input
+        
         const monthIndex = parseMonthInput(month);
         if (monthIndex === -1) {
             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
         }
 
-        // Construct regex to match the month in dateOfSale field
+        
         const monthPattern = `-${padTwoDigits(monthIndex + 1)}-`;
 
-        // Aggregate queries for total sale amount, total sold items, total not sold items
+        
         const [
             totalSaleAmountResult,
             totalSoldItemsResult,
@@ -289,7 +186,7 @@ app.get('/statistics', async (req, res) => {
             ])
         ]);
 
-        // Extract results from aggregation responses
+        
         const totalSaleAmount = totalSaleAmountResult.length > 0 ? totalSaleAmountResult[0].totalSaleAmount : 0;
         const totalSoldItems = totalSoldItemsResult.length > 0 ? totalSoldItemsResult[0].totalSoldItems : 0;
         const totalNotSoldItems = totalNotSoldItemsResult.length > 0 ? totalNotSoldItemsResult[0].totalNotSoldItems : 0;
@@ -306,7 +203,7 @@ app.get('/statistics', async (req, res) => {
     }
 });
 
-// Utility function to parse month input
+
 function parseMonthInput(month) {
     if (!month || typeof month !== 'string') {
         return -1; // Invalid input
@@ -317,104 +214,26 @@ function parseMonthInput(month) {
     return monthIndex;
 }
 
-// Utility function to pad single digit month number with zero
 function padTwoDigits(number) {
     return number.toString().padStart(2, '0');
 }
 
 //bar chart
 
-// app.get('/bar-chart', async (req, res) => {
-//     try {
-//         const { month } = req.query;
-
-//         // Validate and parse month input
-//         const monthIndex = parseMonthInput(month);
-//         if (monthIndex === -1) {
-//             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
-//         }
-
-//         // Construct regex to match the month in dateOfSale field
-//         const monthRegex = `-${padTwoDigits(monthIndex + 1)}-`;
-
-//         // Aggregate query to calculate price ranges and count of items
-//         const result = await Product.aggregate([
-//             {
-//                 $match: {
-//                     dateOfSale: { $regex: monthRegex }
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: null,
-//                     range0_100: { $sum: { $cond: [{ $lte: ["$price", 100] }, 1, 0] } },
-//                     range101_200: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 100] }, { $lte: ["$price", 200] }] }, 1, 0] } },
-//                     range201_300: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 200] }, { $lte: ["$price", 300] }] }, 1, 0] } },
-//                     range301_400: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 300] }, { $lte: ["$price", 400] }] }, 1, 0] } },
-//                     range401_500: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 400] }, { $lte: ["$price", 500] }] }, 1, 0] } },
-//                     range501_600: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 500] }, { $lte: ["$price", 600] }] }, 1, 0] } },
-//                     range601_700: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 600] }, { $lte: ["$price", 700] }] }, 1, 0] } },
-//                     range701_800: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 700] }, { $lte: ["$price", 800] }] }, 1, 0] } },
-//                     range801_900: { $sum: { $cond: [{ $and: [{ $gt: ["$price", 800] }, { $lte: ["$price", 900] }] }, 1, 0] } },
-//                     range901_above: { $sum: { $cond: [{ $gt: ["$price", 900] }, 1, 0] } }
-//                 }
-//             }
-//         ]);
-
-//         // Check if result is empty or undefined
-//         if (!result || result.length === 0) {
-//             return res.json({
-//                 "0-100": 0,
-//                 "101-200": 0,
-//                 "201-300": 0,
-//                 "301-400": 0,
-//                 "401-500": 0,
-//                 "501-600": 0,
-//                 "601-700": 0,
-//                 "701-800": 0,
-//                 "801-900": 0,
-//                 "901-above": 0
-//             });
-//         }
-
-//         // Extract counts from aggregation result
-//         const barChartData = {
-//             "0-100": result[0].range0_100 || 0,
-//             "101-200": result[0].range101_200 || 0,
-//             "201-300": result[0].range201_300 || 0,
-//             "301-400": result[0].range301_400 || 0,
-//             "401-500": result[0].range401_500 || 0,
-//             "501-600": result[0].range501_600 || 0,
-//             "601-700": result[0].range601_700 || 0,
-//             "701-800": result[0].range701_800 || 0,
-//             "801-900": result[0].range801_900 || 0,
-//             "901-above": result[0].range901_above || 0
-//         };
-
-//         // Return the bar chart data
-//         res.json(barChartData);
-//     } catch (error) {
-//         console.error('Error fetching bar chart data:', error);
-//         res.status(500).send('Error fetching bar chart data');
-//     }
-// });
-
-// const { parseMonthInput, padTwoDigits } = require('./utils'); // Assuming you have utility functions to parse and validate month input
-
 app.get('/bar-chart', async (req, res) => {
     try {
         const { month } = req.query;
 
-        // Validate and parse month input
+        
         const monthIndex = parseMonthInput(month);
         if (monthIndex === -1) {
             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
         }
 
-        // Construct regex to match the month in dateOfSale field
+        
         const monthRegex = `-${padTwoDigits(monthIndex + 1)}-`;
 
-        // Aggregate query to calculate price ranges and count of items
+        
         const result = await Product.aggregate([
             {
                 $match: {
@@ -438,7 +257,7 @@ app.get('/bar-chart', async (req, res) => {
             }
         ]);
 
-        // Check if result is empty or undefined
+        
         if (!result || result.length === 0) {
             return res.json({
                 "0-100": 0,
@@ -454,7 +273,7 @@ app.get('/bar-chart', async (req, res) => {
             });
         }
 
-        // Extract counts from aggregation result
+        
         const barChartData = {
             "0-100": result[0].range0_100 || 0,
             "101-200": result[0].range101_200 || 0,
@@ -481,16 +300,16 @@ app.get('/pie-chart', async (req, res) => {
     try {
         const { month } = req.query;
 
-        // Validate and parse month input
+        
         const monthIndex = parseMonthInput(month);
         if (monthIndex === -1) {
             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
         }
 
-        // Construct regex to match the month in dateOfSale field
+        
         const monthRegex = `-${padTwoDigits(monthIndex + 1)}-`;
 
-        // Aggregate query to calculate category counts
+        
         const result = await Product.aggregate([
             {
                 $match: {
@@ -505,7 +324,7 @@ app.get('/pie-chart', async (req, res) => {
             }
         ]);
 
-        // Check if result is empty
+        
         if (result.length === 0) {
             return res.json([]); // Return empty array if no data found
         }
@@ -530,16 +349,16 @@ app.get('/combined-data', async (req, res) => {
     try {
         const { month } = req.query;
 
-        // Validate and parse month input
+        
         const monthIndex = parseMonthInput(month);
         if (monthIndex === -1) {
             return res.status(400).json({ error: 'Invalid month input. Please provide a valid month between January to December.' });
         }
 
-        // Construct regex to match the month in dateOfSale field
+        
         const monthRegex = `-${padTwoDigits(monthIndex + 1)}-`;
 
-        // Fetch data from all three APIs
+        
         const [transactionsResponse, statisticsResponse, barChartDataResponse] = await Promise.all([
             axios.get(`http://localhost:7000/transactions?month=${month}`),
             axios.get(`http://localhost:7000/statistics?month=${month}`),
@@ -551,7 +370,7 @@ app.get('/combined-data', async (req, res) => {
         const statistics = statisticsResponse.data || {};
         const barChartData = barChartDataResponse.data || {};
 
-        // Construct final combined JSON response
+        
         const combinedData = {
             transactions,
             statistics,
