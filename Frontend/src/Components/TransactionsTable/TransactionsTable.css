@@ -1,0 +1,90 @@
+/* src/components/TransactionsTable.css */
+
+.transactions-table-container {
+    text-align: center;
+}
+
+.transactions-table-container h2 {
+    margin-top: 20px;
+}
+.droper{
+
+    width: 20%;
+}
+
+.transactions-table-container input,
+.transactions-table-container select {
+    margin: 10px;
+    padding: 5px;
+}
+
+.transactions-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    margin: 20px 0;
+}
+
+.transactions-table-container th,
+.transactions-table-container td {
+    border: 1px solid #524e4e;
+    border: none;
+    padding: 8px;
+}
+
+.transactions-table-container th {
+    background-color: #d0a030;
+}
+
+.transactions-table-container button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #f0c040;
+    border: none;
+    cursor: pointer;
+}
+
+.transactions-table-container button:hover {
+    background-color: #524e4e;
+}
+
+.transactions-table-container img {
+    max-width: 50px;
+    height: auto;
+    object-fit: contain;
+}
+.searchDrop{
+    display: flex;
+    justify-content: space-between;
+}
+.tbl{
+    background-color: #c6b26f;
+    color: black;
+}
+.tbl thead{
+
+    background-color: #d0a030;
+}
+#serachPr,.droper{
+
+    border-radius: 10px;
+    border: none;
+    padding: 11px;
+    background-color: #d0a030;
+    color: white;
+}
+::placeholder {
+    color: white; /* Desired color */
+}
+.droper{
+    background-color: #d0a030;
+}
+select option:hover{
+
+    background-color: #524e4e;
+}
+.tbl{
+
+    border-radius: 20px;
+    border: none;
+}

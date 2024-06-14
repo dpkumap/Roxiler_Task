@@ -1,0 +1,52 @@
+/* StatisticsBox.css */
+
+/* Container for the entire component */
+.main {
+  margin-top: 20px;
+    background-color: #c6b26f;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Dropdown select for months */
+  select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: #d0a030;
+  }
+  
+  /* Statistics display area */
+  .statistics {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+  }
+  
+  /* Individual statistic items */
+  .statistics p {
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  /* Styling for specific statistics (customize colors as needed) */
+  .total-sale {
+    color: #007bff;
+  }
+  
+  .total-sold {
+    color: #28a745;
+  }
+  
+  .total-not-sold {
+    color: #dc3545;
+  }
+  
